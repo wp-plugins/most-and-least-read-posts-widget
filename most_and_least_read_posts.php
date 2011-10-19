@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.0
+Version: 1.1
 Author URI: http://www.whiletrue.it/
 */
 
@@ -22,6 +22,27 @@ Author URI: http://www.whiletrue.it/
 
 
 add_filter('the_content', 'most_and_least_read_posts_update');
+
+add_filter('plugin_action_links', 'most_and_least_read_posts_add_settings_link', 10, 2 );
+
+add_action('admin_menu', 'most_and_least_read_posts_menu');
+
+
+function most_and_least_read_posts_menu() {
+	add_options_page('Most and Least Read Posts Options', 'Most read posts', 'manage_options', 'most_and_least_read_posts_options', 'most_and_least_read_posts_options');
+}
+
+
+function most_and_least_read_posts_add_settings_link($links, $file) {
+	static $this_plugin;
+	if (!$this_plugin) $this_plugin = plugin_basename(__FILE__);
+ 
+	if ($file == $this_plugin){
+		$settings_link = '<a href="admin.php?page=most_and_least_read_posts_options">'.__("Settings").'</a>';
+		array_unshift($links, $settings_link);
+	}
+	return $links;
+} 
 
 
 function most_and_least_read_posts_update ($content) {
@@ -50,7 +71,27 @@ function most_and_least_read_posts_update ($content) {
 	$meta_key = 'custom_total_hits';
 	$custom_field_total_hits = get_post_meta($post_id, $meta_key, true);
 	$total_hits = (is_numeric($custom_field_total_hits)) ? (int)$custom_field_total_hits : 0;
-	update_post_meta($post_id, $meta_key, str_pad(($total_hits+1),9,0,STR_PAD_LEFT)); 
+	$total_hits += 1;
+	update_post_meta($post_id, $meta_key, str_pad($total_hits,9,0,STR_PAD_LEFT)); 
+
+	//GET ARRAY OF STORED VALUES
+	$option = most_and_least_read_posts_get_options_stored();
+
+	// CHECK IF HAS TO SHOW HITS
+	if ($option['show_hits_in_post']) {
+		$out = '<p style="'.$option['css_style'].'">'
+			.$option['text_shown_before'].$total_hits.$option['text_shown_after']
+			.'</p>';
+	
+		if ($option['position']=='both') {
+			return $out.$content.$out;
+		} else if ($option['position']=='below') {
+			return $content.$out;
+		} else {
+			return $out.$content;
+		}
+	}
+
 	return $content;
 }
 
@@ -91,6 +132,151 @@ function most_and_least_read_posts ($instance, $order) {
 	}      
 	return '<ul>'.$out.'</ul>';
 }
+
+
+function most_and_least_read_posts_options () {
+
+	$option_name = 'most_and_least_read_posts';
+
+	//must check that the user has the required capability 
+	if (!current_user_can('manage_options')) {
+		wp_die( __('You do not have sufficient permissions to access this page.') );
+	}
+
+	$out = '';
+	
+	// See if the user has posted us some information
+	if( isset($_POST['most_and_least_read_posts_position'])) {
+		$option = array();
+
+		$option['show_hits_in_post'] = (isset($_POST[$option_name.'_show_hits_in_post']) and $_POST[$option_name.'_show_hits_in_post']=='on') ? true : false;
+		$option['position'] = esc_html($_POST[$option_name.'_position']);
+		$option['text_shown_before'] = esc_html($_POST[$option_name.'_text_shown_before']);
+		$option['text_shown_after'] = esc_html($_POST[$option_name.'_text_shown_after']);
+		$option['css_style'] = esc_html($_POST[$option_name.'_css_style']);
+		
+		update_option($option_name, $option);
+		// Put a settings updated message on the screen
+		$out .= '<div class="updated"><p><strong>'.__('Settings saved.', 'menu-test' ).'</strong></p></div>';
+	}
+	
+	//GET ARRAY OF STORED VALUES
+	$option = most_and_least_read_posts_get_options_stored();
+	
+	$sel_above = ($option['position']=='above') ? 'selected="selected"' : '';
+	$sel_below = ($option['position']=='below') ? 'selected="selected"' : '';
+	$sel_both  = ($option['position']=='both' ) ? 'selected="selected"' : '';
+
+	$show_hits_in_post = ($option['show_hits_in_post']) ? 'checked="checked"' : '';
+
+	// SETTINGS FORM
+
+	$out .= '
+	<style>
+	#most_and_least_read_posts_form h3 { cursor: default; }
+	#most_and_least_read_posts_form td { vertical-align:top; padding-bottom:15px; }
+	</style>
+	
+	<div class="wrap">
+	<h2>'.__( 'Most and least read posts', 'menu-test' ).'</h2>
+	<div id="poststuff" style="padding-top:10px; position:relative;">
+
+	<div style="float:left; width:74%; padding-right:1%;">
+
+		<form id="most_and_least_read_posts_form" name="form1" method="post" action="">
+
+		<div class="postbox">
+		<h3>'.__("General options", 'menu-test' ).'</h3>
+		<div class="inside">
+			<table>
+			<tr><td style="width:130px;">'.__("Show hits in posts", 'menu-test' ).':</td>
+			<td><input type="checkbox" name="'.$option_name.'_show_hits_in_post" '.$show_hits_in_post.' />
+			</td></tr>
+			<tr><td>'.__("Position", 'menu-test' ).':</td>
+			<td><select name="'.$option_name.'_position">
+				<option value="above" '.$sel_above.' > '.__('only above the post', 'menu-test' ).'</option>
+				<option value="below" '.$sel_below.' > '.__('only below the post', 'menu-test' ).'</option>
+				<option value="both"  '.$sel_both.'  > '.__('above and below the post', 'menu-test' ).'</option>
+				</select>
+			</td></tr>
+			<tr><td>'.__("Text shown", 'menu-test' ).':</td>
+			<td>
+				<input type="text" name="'.$option_name.'_text_shown_before" value="'.stripslashes($option['text_shown_before']).'" size="25">
+				(number)
+				<input type="text" name="'.$option_name.'_text_shown_after" value="'.stripslashes($option['text_shown_after']).'" size="25">
+				<br />
+				<span class="description">'.__("text added before and after the number, to form a standard phrase, 
+				e.g. ' This post has been read (number) times'.
+				Remember to leave a blank space or a puntuaction mark after the first and before the second text.", 'menu-test' ).'</span>
+			</td></tr>
+			<tr><td>'.__("CSS Style", 'menu-test' ).':</td>
+			<td>
+				<input type="text" name="'.$option_name.'_css_style" value="'.stripslashes($option['css_style']).'" size="50"><br />
+				<span class="description">'.__("optional style applied to the paragraph; insert individual rules followed by semicolons.", 'menu-test' ).'</span>
+			</td></tr>
+			</table>
+		</div>
+		</div>
+		
+		<p class="submit">
+			<input type="submit" name="Submit" class="button-primary" value="'.esc_attr('Save Changes').'" />
+		</p>
+
+		</form>
+
+	</div>
+	
+	<div style="float:right; width:25%;">'
+		.really_simple_share_box_content('PremiumPress Shopping Cart', '
+			<a target="_blank" href="https://secure.avangate.com/order/product.php?PRODS=2929632&amp;QTY=1&amp;AFFILIATE=26764&amp;AFFSRC=really_simple_share_plugin">
+				<img border="0" src="http://shopperpress.com/inc/images/banners/180x150.png" style="display: block; margin-left: auto; margin-right: auto;">
+			</a>
+		')
+		.really_simple_share_box_content('Really simple, isn\'t it?', '
+			Most of the actual plugin features were requested by users and developed for the sake of doing it.<br /><br />
+			If you want to be sure this passion lasts centuries, please consider donating some cents!<br /><br />
+			<div style="text-align: center;">
+			<form method="post" action="https://www.paypal.com/cgi-bin/webscr">
+			<input value="_s-xclick" name="cmd" type="hidden">
+			<input value="-----BEGIN PKCS7-----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-----END PKCS7----- " name="encrypted" type="hidden"> 
+			<input alt="PayPal - The safer, easier way to pay online!" name="submit" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/en_US/i/btn/btn_donateCC_LG.gif" type="image"> 
+			<img height="1" width="1" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/it_IT/i/scr/pixel.gif" border="0"> 
+			</form>
+			</div>
+		')
+	.'</div>
+
+	</div>
+	</div>
+	';
+	echo $out; 
+}
+
+
+function most_and_least_read_posts_get_options_stored () {
+	//GET ARRAY OF STORED VALUES
+	$option = get_option('most_and_least_read_posts');
+	 
+	if ($option===false) {
+		//OPTION NOT IN DATABASE, SO WE INSERT DEFAULT VALUES
+		$option = most_and_least_read_posts_get_options_default();
+		add_option('most_and_least_read_posts', $option);
+	}
+	return $option;
+}
+
+
+function most_and_least_read_posts_get_options_default ($position='above') {
+	$option = array();
+	$option['position'] = $position;
+	$option['show_hits_in_post'] = false;
+	$option['text_shown_before'] = 'This post has already been read ';
+	$option['text_shown_after'] = ' times!';
+	$option['css_style'] = 'font-style:italic; font-size:0.8em;';
+	
+	return $option;
+}
+
 
 
 //////////
