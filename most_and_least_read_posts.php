@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.1
+Version: 1.2
 Author URI: http://www.whiletrue.it/
 */
 
@@ -109,7 +109,7 @@ function most_and_least_read_posts ($instance, $order) {
 		$sql_esc = " and ( ".implode(" or ", $sql_esc_arr).") ";
 	}
 
-	$sql = " select p.ID, p.post_title
+	$sql = " select p.ID, p.post_title, m.meta_value
 		FROM $wpdb->postmeta as m
 			LEFT JOIN $wpdb->posts as p on (m.post_id = p.ID)
 		WHERE m.meta_key = 'custom_total_hits'
@@ -121,9 +121,10 @@ function most_and_least_read_posts ($instance, $order) {
 
 	if ($output) {
 		foreach ($output as $line) {
+		$hits = ($instance['show_hits']) ? ' ('.(int)$line->meta_value.')' : '';
 	  	$out .=  '<li>
 					<a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
-						.$line->post_title.'
+						.$line->post_title.$hits.'
 					</a>
 				</li>';
 		}   
@@ -303,10 +304,11 @@ class LeastReadPostsWidget extends WP_Widget {
 
     /** @see WP_Widget::update */
     function update($new_instance, $old_instance) {				
-	$instance = $old_instance;
-	$instance['title'] = strip_tags($new_instance['title']);
-	$instance['posts_number'] = strip_tags($new_instance['posts_number']);
-	$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
+		$instance = $old_instance;
+		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
+		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
+		$instance['show_hits'] = ($new_instance['show_hits']=='on') ? true : false;
         return $instance;
     }
 
@@ -316,10 +318,12 @@ class LeastReadPostsWidget extends WP_Widget {
 			$instance['title'] = 'Least Read Posts';
 			$instance['posts_number'] = 5;
 			$instance['words_excluded'] = '';
+			$instance['show_hits'] = false;
 		}					
         $title = esc_attr($instance['title']);
         $words_number = esc_attr($instance['words_number']);
         $words_excluded = esc_attr($instance['words_excluded']);
+		$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
         ?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -332,6 +336,10 @@ class LeastReadPostsWidget extends WP_Widget {
          <p>
           <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post whose title contains any of these words (comma separated):'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('words_excluded'); ?>" name="<?php echo $this->get_field_name('words_excluded'); ?>" type="text" value="<?php echo $words_excluded; ?>" />
+        </p>
+         <p>
+          <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />
+          <label for="<?php echo $this->get_field_id('show_hits'); ?>"><?php _e('Show post hits'); ?></label> 
         </p>
         <?php 
     }
@@ -359,10 +367,11 @@ class MostReadPostsWidget extends WP_Widget {
 
     /** @see WP_Widget::update */
     function update($new_instance, $old_instance) {				
-	$instance = $old_instance;
-	$instance['title'] = strip_tags($new_instance['title']);
-	$instance['posts_number'] = strip_tags($new_instance['posts_number']);
-	$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
+		$instance = $old_instance;
+		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
+		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
+		$instance['show_hits'] = ($new_instance['show_hits']=='on') ? true : false;
         return $instance;
     }
 
@@ -372,10 +381,12 @@ class MostReadPostsWidget extends WP_Widget {
 			$instance['title'] = 'Most Read Posts';
 			$instance['posts_number'] = 5;
 			$instance['words_excluded'] = '';
+			$instance['show_hits'] = false;
 		}					
         $title = esc_attr($instance['title']);
         $posts_number = esc_attr($instance['posts_number']);
         $words_excluded = esc_attr($instance['words_excluded']);
+		$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
         ?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -388,6 +399,10 @@ class MostReadPostsWidget extends WP_Widget {
          <p>
           <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post whose title contains any of these words (comma separated):'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('words_excluded'); ?>" name="<?php echo $this->get_field_name('words_excluded'); ?>" type="text" value="<?php echo $words_excluded; ?>" />
+        </p>
+         <p>
+          <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />
+          <label for="<?php echo $this->get_field_id('show_hits'); ?>"><?php _e('Show post hits'); ?></label> 
         </p>
         <?php 
     }
