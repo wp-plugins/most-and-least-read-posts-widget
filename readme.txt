@@ -57,6 +57,7 @@ Added: style customization of hits on widget, through the "most_and_least_read_p
 Changed: hits on widget put out of the link
 Fixed: query limited only to published posts
 Fixed: error while saving widget options
+Fixed: error while opening the Settings page
 
 = 1.2 =
 Added: option to show hits after the post title, inside the widgets
