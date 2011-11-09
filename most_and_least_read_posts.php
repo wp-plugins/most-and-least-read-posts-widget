@@ -231,12 +231,12 @@ function most_and_least_read_posts_options () {
 	</div>
 	
 	<div style="float:right; width:25%;">'
-		.really_simple_share_box_content('PremiumPress Shopping Cart', '
+		.most_and_least_read_posts_box_content('PremiumPress Shopping Cart', '
 			<a target="_blank" href="https://secure.avangate.com/order/product.php?PRODS=2929632&amp;QTY=1&amp;AFFILIATE=26764&amp;AFFSRC=really_simple_share_plugin">
 				<img border="0" src="http://shopperpress.com/inc/images/banners/180x150.png" style="display: block; margin-left: auto; margin-right: auto;">
 			</a>
 		')
-		.really_simple_share_box_content('Really simple, isn\'t it?', '
+		.most_and_least_read_posts_box_content('Really simple, isn\'t it?', '
 			Most of the actual plugin features were requested by users and developed for the sake of doing it.<br /><br />
 			If you want to be sure this passion lasts centuries, please consider donating some cents!<br /><br />
 			<div style="text-align: center;">
@@ -254,6 +254,30 @@ function most_and_least_read_posts_options () {
 	</div>
 	';
 	echo $out; 
+}
+
+
+function most_and_least_read_posts_box_content ($title, $content) {
+	if (is_array($content)) {
+		$content_string = '<table>';
+		foreach ($content as $name=>$value) {
+			$content_string .= '<tr>
+				<td style="width:130px;">'.__($name, 'menu-test' ).':</td>	
+				<td>'.$value.'</td>
+				</tr>';
+		}
+		$content_string .= '</table>';
+	} else {
+		$content_string = $content;
+	}
+
+	$out = '
+		<div class="postbox">
+			<h3>'.__($title, 'menu-test' ).'</h3>
+			<div class="inside">'.$content_string.'</div>
+		</div>
+		';
+	return $out;
 }
 
 
