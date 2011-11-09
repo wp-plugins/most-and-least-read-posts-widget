@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.2
+Version: 1.3
 Author URI: http://www.whiletrue.it/
 */
 
@@ -112,7 +112,9 @@ function most_and_least_read_posts ($instance, $order) {
 	$sql = " select p.ID, p.post_title, m.meta_value
 		FROM $wpdb->postmeta as m
 			LEFT JOIN $wpdb->posts as p on (m.post_id = p.ID)
-		WHERE m.meta_key = 'custom_total_hits'
+		WHERE p.post_status = 'publish'
+			and p.post_type = 'post'
+			and m.meta_key = 'custom_total_hits'
 			$sql_esc
 		ORDER BY m.meta_value $order
 		LIMIT 0, ".$instance['posts_number'];
@@ -124,8 +126,9 @@ function most_and_least_read_posts ($instance, $order) {
 		$hits = ($instance['show_hits']) ? ' ('.(int)$line->meta_value.')' : '';
 	  	$out .=  '<li>
 					<a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
-						.$line->post_title.$hits.'
+						.$line->post_title.'
 					</a>
+					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
 				</li>';
 		}   
 	} else {
@@ -321,7 +324,7 @@ class LeastReadPostsWidget extends WP_Widget {
 			$instance['show_hits'] = false;
 		}					
         $title = esc_attr($instance['title']);
-        $words_number = esc_attr($instance['words_number']);
+        $posts_number = esc_attr($instance['posts_number']);
         $words_excluded = esc_attr($instance['words_excluded']);
 		$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
         ?>
@@ -331,7 +334,7 @@ class LeastReadPostsWidget extends WP_Widget {
         </p>
          <p>
           <label for="<?php echo $this->get_field_id('posts_number'); ?>"><?php _e('Number of posts to show:'); ?></label> 
-          <input class="widefat" id="<?php echo $this->get_field_id('posts_number'); ?>" name="<?php echo $this->get_field_name('posts_number'); ?>" type="text" value="<?php echo $words_number; ?>" />
+          <input class="widefat" id="<?php echo $this->get_field_id('posts_number'); ?>" name="<?php echo $this->get_field_name('posts_number'); ?>" type="text" value="<?php echo $posts_number; ?>" />
         </p>
          <p>
           <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post whose title contains any of these words (comma separated):'); ?></label> 
