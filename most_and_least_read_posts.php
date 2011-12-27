@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.3
+Version: 1.4
 Author URI: http://www.whiletrue.it/
 */
 
@@ -108,6 +108,9 @@ function most_and_least_read_posts ($instance, $order) {
 		}
 		$sql_esc = " and ( ".implode(" or ", $sql_esc_arr).") ";
 	}
+	
+	$days_ago = (is_numeric($instance['days_ago'])) ? $instance['days_ago'] : 365;
+	$min_date = date('Y-m-d', mktime(4,0,0,date('m'),date('d')-$days_ago,date('Y')));
 
 	$sql = " select p.ID, p.post_title, m.meta_value
 		FROM $wpdb->postmeta as m
@@ -115,6 +118,7 @@ function most_and_least_read_posts ($instance, $order) {
 		WHERE p.post_status = 'publish'
 			and p.post_type = 'post'
 			and m.meta_key = 'custom_total_hits'
+			and p.post_date >= '$min_date'
 			$sql_esc
 		ORDER BY m.meta_value $order
 		LIMIT 0, ".$instance['posts_number'];
@@ -287,28 +291,19 @@ function most_and_least_read_posts_get_options_stored () {
 	 
 	if ($option===false) {
 		//OPTION NOT IN DATABASE, SO WE INSERT DEFAULT VALUES
-		$option = most_and_least_read_posts_get_options_default();
+		$option = array();
+		$option['position'] = 'above';
+		$option['show_hits_in_post'] = false;
+		$option['text_shown_before'] = 'This post has already been read ';
+		$option['text_shown_after'] = ' times!';
+		$option['css_style'] = 'font-style:italic; font-size:0.8em;';
 		add_option('most_and_least_read_posts', $option);
 	}
 	return $option;
 }
 
 
-function most_and_least_read_posts_get_options_default ($position='above') {
-	$option = array();
-	$option['position'] = $position;
-	$option['show_hits_in_post'] = false;
-	$option['text_shown_before'] = 'This post has already been read ';
-	$option['text_shown_after'] = ' times!';
-	$option['css_style'] = 'font-style:italic; font-size:0.8em;';
-	
-	return $option;
-}
-
-
-
 //////////
-
 
 
 /**
@@ -385,11 +380,11 @@ class MostReadPostsWidget extends WP_Widget {
 
     /** @see WP_Widget::widget */
     function widget($args, $instance) {		
-        extract( $args );
-        $title = apply_filters('widget_title', $instance['title']);
-        echo $before_widget;  
-		if ( $title ) echo $before_title . $title . $after_title; 
-		echo most_and_least_read_posts($instance, ' DESC ').$after_widget;
+			extract( $args );
+			$title = apply_filters('widget_title', $instance['title']);
+			echo $before_widget;  
+			if ( $title ) echo $before_title . $title . $after_title; 
+			echo most_and_least_read_posts($instance, ' DESC ').$after_widget;
     }
 
     /** @see WP_Widget::update */
@@ -398,23 +393,24 @@ class MostReadPostsWidget extends WP_Widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
+		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
 		$instance['show_hits'] = ($new_instance['show_hits']=='on') ? true : false;
         return $instance;
     }
 
     /** @see WP_Widget::form */
     function form($instance) {
-		if (empty($instance)) {
-			$instance['title'] = 'Most Read Posts';
-			$instance['posts_number'] = 5;
-			$instance['words_excluded'] = '';
-			$instance['show_hits'] = false;
-		}					
-        $title = esc_attr($instance['title']);
-        $posts_number = esc_attr($instance['posts_number']);
-        $words_excluded = esc_attr($instance['words_excluded']);
-		$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
-        ?>
+			if (empty($instance)) {
+				$instance['title'] = 'Most Read Posts';
+				$instance['words_excluded'] = '';
+				$instance['show_hits'] = false;
+			}					
+			$title = esc_attr($instance['title']);
+			$posts_number = is_numeric($instance['posts_number']) ? esc_attr($instance['posts_number']) : 5;
+			$words_excluded = esc_attr($instance['words_excluded']);
+			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
+			$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
+			?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
@@ -426,6 +422,10 @@ class MostReadPostsWidget extends WP_Widget {
          <p>
           <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post whose title contains any of these words (comma separated):'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('words_excluded'); ?>" name="<?php echo $this->get_field_name('words_excluded'); ?>" type="text" value="<?php echo $words_excluded; ?>" />
+        </p>
+         <p>
+          <label for="<?php echo $this->get_field_id('days_ago'); ?>"><?php _e('Look back X days ago:'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('days_ago'); ?>" name="<?php echo $this->get_field_name('days_ago'); ?>" type="text" value="<?php echo $days_ago; ?>" />
         </p>
          <p>
           <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />

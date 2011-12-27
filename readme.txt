@@ -4,7 +4,7 @@ Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
 Tested up to: 3.1
-Stable tag: 1.3
+Stable tag: 1.4
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -14,8 +14,9 @@ Provide two widgets, showing lists of the most and reast read posts.
 The following options are customizable:
 
 * number of posts to show
-* exclude post whose title contains certain words
+* exclude posts whose title contains certain words
 * show post hits after the title (style customizable via CSS class)
+* exclude posts older than XX days
 
 The plugin starts counting hits once activated, storing them in the "custom_total_hits" custom field without the need of external accounts.
 
@@ -51,6 +52,9 @@ Coming soon
 Coming soon
 
 == Changelog ==
+
+= 1.4 =
+Added: option to exclude posts older than XX days (default: 365 days)
 
 = 1.3 =
 Added: style customization of hits on widget, through the "most_and_least_read_posts_hits" CSS class
