@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.4
+Version: 1.5
 Author URI: http://www.whiletrue.it/
 */
 
@@ -330,23 +330,25 @@ class LeastReadPostsWidget extends WP_Widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
+		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
 		$instance['show_hits'] = ($new_instance['show_hits']=='on') ? true : false;
         return $instance;
     }
 
     /** @see WP_Widget::form */
     function form($instance) {
-		if (empty($instance)) {
-			$instance['title'] = 'Least Read Posts';
-			$instance['posts_number'] = 5;
-			$instance['words_excluded'] = '';
-			$instance['show_hits'] = false;
-		}					
-        $title = esc_attr($instance['title']);
-        $posts_number = esc_attr($instance['posts_number']);
-        $words_excluded = esc_attr($instance['words_excluded']);
-		$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
-        ?>
+			if (empty($instance)) {
+				$instance['title'] = 'Least Read Posts';
+				$instance['posts_number'] = 5;
+				$instance['words_excluded'] = '';
+				$instance['show_hits'] = false;
+			}					
+      $title = esc_attr($instance['title']);
+      $posts_number = esc_attr($instance['posts_number']);
+      $words_excluded = esc_attr($instance['words_excluded']);
+			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
+			$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
+      ?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
@@ -358,6 +360,10 @@ class LeastReadPostsWidget extends WP_Widget {
          <p>
           <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post whose title contains any of these words (comma separated):'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('words_excluded'); ?>" name="<?php echo $this->get_field_name('words_excluded'); ?>" type="text" value="<?php echo $words_excluded; ?>" />
+        </p>
+         <p>
+          <label for="<?php echo $this->get_field_id('days_ago'); ?>"><?php _e('Look back X days ago:'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('days_ago'); ?>" name="<?php echo $this->get_field_name('days_ago'); ?>" type="text" value="<?php echo $days_ago; ?>" />
         </p>
          <p>
           <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />

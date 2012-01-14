@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.1
-Stable tag: 1.4
+Tested up to: 3.3.1
+Stable tag: 1.5
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -46,15 +46,27 @@ Do you like this plugin? Give a chance to our other works:
 4. Enjoy!
 
 == Frequently Asked Questions ==
-Coming soon
+
+= I get an error message that says "no results available" =
+The plugin starts collecting hits once installed, so there are "no results available" for a short time, until the first data is stored. 
+It's better to show the widget some hours (or days) after having installed it.
+
+= The same post shows up multiple times "
+This uncommon issue can be caused by duplicated custom fields in some posts. 
+To solve it, inspect the post custom fields and delete unnecessary duplicates of the "custom_total_hits" field. 
+
 
 == Screenshots ==
 Coming soon
 
 == Changelog ==
 
+= 1.5 =
+Added: option to exclude posts older than XX days also in Least Read Posts (default: 365 days)
+Added: Frequently Asked Questions
+
 = 1.4 =
-Added: option to exclude posts older than XX days (default: 365 days)
+Added: option to exclude posts older than XX days in Most Read Posts (default: 365 days)
 
 = 1.3 =
 Added: style customization of hits on widget, through the "most_and_least_read_posts_hits" CSS class
