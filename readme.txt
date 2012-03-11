@@ -4,7 +4,7 @@ Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
 Tested up to: 3.3.1
-Stable tag: 1.5
+Stable tag: 1.6
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -21,6 +21,8 @@ The following options are customizable:
 The plugin starts counting hits once activated, storing them in the "custom_total_hits" custom field without the need of external accounts.
 
 The most popular web crawlers (e.g. Googlebot) are recognized and their hits discarded.
+
+Archived post hits are shown in a column inside the backend post list.
 
 Optionally, the number of hits can be shown inside the post content, with:
 
@@ -60,6 +62,9 @@ To solve it, inspect the post custom fields and delete unnecessary duplicates of
 Coming soon
 
 == Changelog ==
+
+= 1.6 =
+Added: archived post hits are now shown in a column inside the backend post list.
 
 = 1.5 =
 Added: option to exclude posts older than XX days also in Least Read Posts (default: 365 days)

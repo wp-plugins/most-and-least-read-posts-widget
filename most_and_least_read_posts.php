@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.5
+Version: 1.6
 Author URI: http://www.whiletrue.it/
 */
 
@@ -24,8 +24,25 @@ Author URI: http://www.whiletrue.it/
 add_filter('the_content', 'most_and_least_read_posts_update');
 
 add_filter('plugin_action_links', 'most_and_least_read_posts_add_settings_link', 10, 2 );
-
 add_action('admin_menu', 'most_and_least_read_posts_menu');
+
+add_filter('manage_posts_columns', 'most_and_least_read_posts_add_column');
+add_action('manage_posts_custom_column', 'most_and_least_read_posts_custom_columns', 10, 2);
+
+
+function most_and_least_read_posts_add_column($columns) {
+    return array_merge($columns, array('hits' => __('Hits')));
+}
+
+
+function most_and_least_read_posts_custom_columns( $column, $post_id ) {
+	if ( $column == 'hits' ) {
+		$meta_key = 'custom_total_hits';
+		$custom_field_total_hits = get_post_meta($post_id, $meta_key, true);
+		$total_hits = (is_numeric($custom_field_total_hits)) ? (int)$custom_field_total_hits : 0;
+		echo $total_hits;
+	}
+}
 
 
 function most_and_least_read_posts_menu() {
