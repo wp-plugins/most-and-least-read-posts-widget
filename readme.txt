@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.3.1
-Stable tag: 1.6
+Tested up to: 3.3.2
+Stable tag: 1.7
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -29,6 +29,9 @@ Optionally, the number of hits can be shown inside the post content, with:
 * a custom phrase, e.g. "This post has already been read XX times!"
 * a custom position (above the post, below the post, both)
 * a custom CSS style
+
+If you want to show the post hits anywhere inside the template loop, you can the php function provided, e.g.: 
+`<?php echo most_and_least_read_posts_get_hits(get_the_ID()); ?>`
 
 For more informations: http://www.whiletrue.it/en/projects/wordpress/29-most-and-least-read-posts-widget-per-wordpress.html
 
@@ -62,6 +65,9 @@ To solve it, inspect the post custom fields and delete unnecessary duplicates of
 Coming soon
 
 == Changelog ==
+
+= 1.7 =
+Added: php function to retrieve and show hits inside the template loop
 
 = 1.6 =
 Added: archived post hits are now shown in a column inside the backend post list.
