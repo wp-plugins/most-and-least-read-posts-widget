@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.3.2
-Stable tag: 1.7
+Tested up to: 3.4.2
+Stable tag: 1.8
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -33,22 +33,19 @@ Optionally, the number of hits can be shown inside the post content, with:
 If you want to show the post hits anywhere inside the template loop, you can the php function provided, e.g.: 
 `<?php echo most_and_least_read_posts_get_hits(get_the_ID()); ?>`
 
-For more informations: http://www.whiletrue.it/en/projects/wordpress/29-most-and-least-read-posts-widget-per-wordpress.html
+= Reference =
+
+For more informations: [www.whiletrue.it](http://www.whiletrue.it/en/projects/wordpress/29-most-and-least-read-posts-widget-per-wordpress.html "www.whiletrue.it")
 
 Do you like this plugin? Give a chance to our other works:
 
 * [Really Simple Facebook Twitter Share Buttons](http://www.whiletrue.it/en/projects/wordpress/22-really-simple-facebook-twitter-share-buttons-per-wordpress.html "Really Simple Facebook Twitter Share Buttons")
-* [Random Tweet Widget](http://www.whiletrue.it/en/projects/wordpress/33-random-tweet-widget-per-wordpress.html "Random Tweet Widget")
+* [Tilted Tag Cloud Widget](http://www.whiletrue.it/en/projects/wordpress/36-tilted-tag-cloud-widget-per-wordpress.html "Tilted Tag Cloud Widget")
 * [Reading Time](http://www.whiletrue.it/en/projects/wordpress/17-reading-time-per-wordpress.html "Reading Time")
-* [Really Simple Twitter Feed Widget](http://www.whiletrue.it/en/projects/wordpress/25-really-simple-twitter-feed-widget-per-wordpress.html "Really Simple Twitter Feed Widget")
-* [Tilted Twitter Cloud Widget](http://www.whiletrue.it/en/projects/wordpress/26-tilted-twitter-cloud-widget-per-wordpress.html "Tilted Twitter Cloud Widget")
 
 
 == Installation ==
-1. Upload the `most_and_least_read_posts_widget` directory into the `/wp-content/plugins/` directory
-2. Activate the plugin through the `Plugins` menu in WordPress
-3. Inside the `Themes->Widget` menu, place the Least Read Posts Widget inside a sidebar, customize the settings and save
-4. Enjoy!
+Best is to install directly from WordPress. If manual installation is required, please make sure to put all of the plugin files in a folder named `most_and_least_read_posts_widget` (not two nested folders) in the plugin directory, then activate the plugin through the `Plugins` menu in WordPress.
 
 == Frequently Asked Questions ==
 
@@ -60,11 +57,20 @@ It's better to show the widget some hours (or days) after having installed it.
 This uncommon issue can be caused by duplicated custom fields in some posts. 
 To solve it, inspect the post custom fields and delete unnecessary duplicates of the "custom_total_hits" field. 
 
+= Can I customize the thumbs? =
+Yes, you can do it editing the "mlrp_ul" class in your template style.css file.
+E.g. 50x50 pixels images, floating on the right:
+.mlrp_ul img { width: 50px; height: 50px; float: right; }
 
 == Screenshots ==
 Coming soon
 
 == Changelog ==
+
+= 1.8 =
+Added: show post thumbs option
+Added: "mlrp_ul" ul class for easy CSS styling
+Fixed: better bot recognition
 
 = 1.7 =
 Added: php function to retrieve and show hits inside the template loop

@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.7
+Version: 1.8
 Author URI: http://www.whiletrue.it/
 */
 
@@ -84,7 +84,7 @@ function most_and_least_read_posts_update ($content) {
 		'ia_archiver', 'Lycos', 'Scooter', 'AltaVista', 'Teoma', 'Gigabot'
 	);
 	foreach ($spiders as $spider) {
-		if (eregi($spider, $_SERVER['HTTP_USER_AGENT'])) {
+		if (preg_match('/'.$spider.'/i', $_SERVER['HTTP_USER_AGENT'])) {
 			return $content;
 		}
 	}
@@ -101,6 +101,7 @@ function most_and_least_read_posts_update ($content) {
 	$option = most_and_least_read_posts_get_options_stored();
 
 	// CHECK IF HAS TO SHOW HITS
+	$out = '';
 	if ($option['show_hits_in_post']) {
 		$out = '<p style="'.$option['css_style'].'">'
 			.$option['text_shown_before'].$total_hits.$option['text_shown_after']
@@ -148,12 +149,39 @@ function most_and_least_read_posts ($instance, $order) {
 	        
 	$output = $wpdb->get_results($sql);
 
+	$out = '';
 	if ($output) {
 		foreach ($output as $line) {
 		$hits = ($instance['show_hits']) ? ' ('.(int)$line->meta_value.')' : '';
+		
+		$media = '';
+		if ($instance['show_thumbs']) {
+			$media = '';
+			// TRY TO USE THE THUMBNAIL, OTHERWHISE TRY TO USE THE FIRST ATTACHMENT
+			if ( function_exists('has_post_thumbnail') and has_post_thumbnail($line->ID) ) {
+				$post_thumbnail_id = get_post_thumbnail_id($line->ID);
+				$media = wp_get_attachment_image($post_thumbnail_id, 'thumbnail', false);
+			}
+			// IF NO MEDIA IS FOUND, LOOK FOR AN ATTACHMENT (THUMBNAIL)
+			if ($media=='') {
+				$args = array(
+					'post_type'   => 'attachment',
+					'numberposts' => 1,
+					'post_status' => null,
+					'post_parent' => $line->ID
+					);
+
+				$attachments = get_posts( $args );
+
+				if ( $attachments ) {
+					$attachment = $attachments[0];
+					$media = wp_get_attachment_image($attachment->ID, 'thumbnail', false);
+				}
+			}
+		}		
 	  	$out .=  '<li>
 					<a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
-						.$line->post_title.'
+						.$media.$line->post_title.'
 					</a>
 					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
 				</li>';
@@ -161,7 +189,8 @@ function most_and_least_read_posts ($instance, $order) {
 	} else {
 		$out .= '<li>'.__('No results available', 'least_read_posts').'</li>';
 	}      
-	return '<ul>'.$out.'</ul>';
+	return '<ul class="mlrp_ul">'.$out.'</ul>
+		<div style="clear:both;"></div>';
 }
 
 
@@ -423,7 +452,8 @@ class MostReadPostsWidget extends WP_Widget {
 		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
 		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
-		$instance['show_hits'] = ($new_instance['show_hits']=='on') ? true : false;
+		$instance['show_hits']   = ($new_instance['show_hits']=='on'  ) ? true : false;
+		$instance['show_thumbs'] = ($new_instance['show_thumbs']=='on') ? true : false;
         return $instance;
     }
 
@@ -432,13 +462,15 @@ class MostReadPostsWidget extends WP_Widget {
 			if (empty($instance)) {
 				$instance['title'] = 'Most Read Posts';
 				$instance['words_excluded'] = '';
-				$instance['show_hits'] = false;
+				$instance['show_hits']   = false;
+				$instance['show_thumbs'] = false;
 			}					
 			$title = esc_attr($instance['title']);
 			$posts_number = is_numeric($instance['posts_number']) ? esc_attr($instance['posts_number']) : 5;
 			$words_excluded = esc_attr($instance['words_excluded']);
 			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
-			$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
+			$show_hits   = ($instance['show_hits']  ) ? 'checked="checked"' : '';
+			$show_thumbs = ($instance['show_thumbs']) ? 'checked="checked"' : '';
 			?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -459,6 +491,10 @@ class MostReadPostsWidget extends WP_Widget {
          <p>
           <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />
           <label for="<?php echo $this->get_field_id('show_hits'); ?>"><?php _e('Show post hits'); ?></label> 
+        </p>
+         <p>
+          <input id="<?php echo $this->get_field_id('show_thumbs'); ?>" name="<?php echo $this->get_field_name('show_thumbs'); ?>" type="checkbox" <?php echo $show_thumbs; ?> />
+          <label for="<?php echo $this->get_field_id('show_thumbs'); ?>"><?php _e('Show post thumbs'); ?></label> 
         </p>
         <?php 
     }
