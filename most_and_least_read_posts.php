@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.8
+Version: 1.9
 Author URI: http://www.whiletrue.it/
 */
 
@@ -121,7 +121,7 @@ function most_and_least_read_posts_update ($content) {
 
 
 function most_and_least_read_posts ($instance, $order) {
-	global $wpdb;
+	global $wpdb, $table_prefix;
 
 	$sql_esc = '';
 	if ($instance['words_excluded']!='') {
@@ -136,9 +136,15 @@ function most_and_least_read_posts ($instance, $order) {
 	$days_ago = (is_numeric($instance['days_ago'])) ? $instance['days_ago'] : 365;
 	$min_date = date('Y-m-d', mktime(4,0,0,date('m'),date('d')-$days_ago,date('Y')));
 
-	$sql = " select p.ID, p.post_title, m.meta_value
+	$sql_wpml = '';
+	if (defined("ICL_LANGUAGE_CODE") and ICL_LANGUAGE_CODE!='') {  //if WPML is active
+		$sql_wpml = " JOIN ".$table_prefix."icl_translations as t on (t.element_id = p.ID and t.language_code = '".ICL_LANGUAGE_CODE."') ";
+	}
+	
+	$sql = " select DISTINCT p.ID, p.post_title, m.meta_value
 		FROM $wpdb->postmeta as m
 			LEFT JOIN $wpdb->posts as p on (m.post_id = p.ID)
+			".$sql_wpml."
 		WHERE p.post_status = 'publish'
 			and p.post_type = 'post'
 			and m.meta_key = 'custom_total_hits'

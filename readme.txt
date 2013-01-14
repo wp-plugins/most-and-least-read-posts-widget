@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.4.2
-Stable tag: 1.8
+Tested up to: 3.5
+Stable tag: 1.9
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -24,6 +24,8 @@ The most popular web crawlers (e.g. Googlebot) are recognized and their hits dis
 
 Archived post hits are shown in a column inside the backend post list.
 
+The plugin is compatible with multi-language WPML plugin, showing most/least read posts for current language.
+
 Optionally, the number of hits can be shown inside the post content, with:
 
 * a custom phrase, e.g. "This post has already been read XX times!"
@@ -35,13 +37,13 @@ If you want to show the post hits anywhere inside the template loop, you can the
 
 = Reference =
 
-For more informations: [www.whiletrue.it](http://www.whiletrue.it/en/projects/wordpress/29-most-and-least-read-posts-widget-per-wordpress.html "www.whiletrue.it")
+For more informations: [www.whiletrue.it](http://www.whiletrue.it/most-and-least-read-posts-widget-for-wordpress/ "www.whiletrue.it")
 
 Do you like this plugin? Give a chance to our other works:
 
-* [Really Simple Facebook Twitter Share Buttons](http://www.whiletrue.it/en/projects/wordpress/22-really-simple-facebook-twitter-share-buttons-per-wordpress.html "Really Simple Facebook Twitter Share Buttons")
-* [Tilted Tag Cloud Widget](http://www.whiletrue.it/en/projects/wordpress/36-tilted-tag-cloud-widget-per-wordpress.html "Tilted Tag Cloud Widget")
-* [Reading Time](http://www.whiletrue.it/en/projects/wordpress/17-reading-time-per-wordpress.html "Reading Time")
+* [Really Simple Facebook Twitter Share Buttons](http://www.whiletrue.it/really-simple-facebook-twitter-share-buttons-for-wordpress/ "Really Simple Facebook Twitter Share Buttons")
+* [Tilted Tag Cloud Widget](http://www.whiletrue.it/tilted-tag-cloud-widget-per-wordpress/ "Tilted Tag Cloud Widget")
+* [Reading Time](http://www.whiletrue.it/reading-time-for-wordpress/ "Reading Time")
 
 
 == Installation ==
@@ -66,6 +68,9 @@ E.g. 50x50 pixels images, floating on the right:
 Coming soon
 
 == Changelog ==
+
+= 1.9 =
+Added: support for WPML plugin, showing most/least read posts for current language
 
 = 1.8 =
 Added: show post thumbs option
