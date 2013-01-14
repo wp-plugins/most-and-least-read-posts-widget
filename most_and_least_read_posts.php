@@ -187,8 +187,8 @@ function most_and_least_read_posts ($instance, $order) {
 		}		
 	  	$out .=  '<li>
 					<a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
-						.$media.$line->post_title.'
-					</a>
+						.$media.$line->post_title
+					.'</a>
 					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
 				</li>';
 		}   
