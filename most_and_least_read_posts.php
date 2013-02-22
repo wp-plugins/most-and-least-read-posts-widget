@@ -5,7 +5,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 1.9
+Version: 2.0
 Author URI: http://www.whiletrue.it/
 */
 
@@ -158,38 +158,39 @@ function most_and_least_read_posts ($instance, $order) {
 	$out = '';
 	if ($output) {
 		foreach ($output as $line) {
-		$hits = ($instance['show_hits']) ? ' ('.(int)$line->meta_value.')' : '';
+			$hits_text = ($instance['show_hits_text']!='') ? ' '.$instance['show_hits_text'] : '';
+			$hits = ($instance['show_hits']) ? ' ('.number_format((int)$line->meta_value).$hits_text.')' : '';
 		
-		$media = '';
-		if ($instance['show_thumbs']) {
 			$media = '';
-			// TRY TO USE THE THUMBNAIL, OTHERWHISE TRY TO USE THE FIRST ATTACHMENT
-			if ( function_exists('has_post_thumbnail') and has_post_thumbnail($line->ID) ) {
-				$post_thumbnail_id = get_post_thumbnail_id($line->ID);
-				$media = wp_get_attachment_image($post_thumbnail_id, 'thumbnail', false);
-			}
-			// IF NO MEDIA IS FOUND, LOOK FOR AN ATTACHMENT (THUMBNAIL)
-			if ($media=='') {
-				$args = array(
-					'post_type'   => 'attachment',
-					'numberposts' => 1,
-					'post_status' => null,
-					'post_parent' => $line->ID
-					);
-
-				$attachments = get_posts( $args );
-
-				if ( $attachments ) {
-					$attachment = $attachments[0];
-					$media = wp_get_attachment_image($attachment->ID, 'thumbnail', false);
+			if ($instance['show_thumbs']) {
+				$media = '';
+				// TRY TO USE THE THUMBNAIL, OTHERWHISE TRY TO USE THE FIRST ATTACHMENT
+				if ( function_exists('has_post_thumbnail') and has_post_thumbnail($line->ID) ) {
+					$post_thumbnail_id = get_post_thumbnail_id($line->ID);
+					$media = wp_get_attachment_image($post_thumbnail_id, 'thumbnail', false);
 				}
-			}
-		}		
-	  	$out .=  '<li>
+				// IF NO MEDIA IS FOUND, LOOK FOR AN ATTACHMENT (THUMBNAIL)
+				if ($media=='') {
+					$args = array(
+						'post_type'   => 'attachment',
+						'numberposts' => 1,
+						'post_status' => null,
+						'post_parent' => $line->ID
+						);
+
+					$attachments = get_posts( $args );
+
+					if ( $attachments ) {
+						$attachment = $attachments[0];
+						$media = wp_get_attachment_image($attachment->ID, 'thumbnail', false);
+					}
+				}
+			}		
+		  	$out .=  '<li>
 					<a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
 						.$media.$line->post_title
 					.'</a>
-					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
+					<span class="most_and_least_read_posts_hits">'.$hits .'</span>
 				</li>';
 		}   
 	} else {
@@ -390,6 +391,7 @@ class LeastReadPostsWidget extends WP_Widget {
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
 		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
 		$instance['show_hits'] = ($new_instance['show_hits']=='on') ? true : false;
+		$instance['show_hits_text'] = strip_tags($new_instance['show_hits_text']);
         return $instance;
     }
 
@@ -400,12 +402,14 @@ class LeastReadPostsWidget extends WP_Widget {
 				$instance['posts_number'] = 5;
 				$instance['words_excluded'] = '';
 				$instance['show_hits'] = false;
+				$instance['show_hits_text'] = 'views';
 			}					
-      $title = esc_attr($instance['title']);
-      $posts_number = esc_attr($instance['posts_number']);
-      $words_excluded = esc_attr($instance['words_excluded']);
-			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
-			$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
+		$title = esc_attr($instance['title']);
+		$posts_number = esc_attr($instance['posts_number']);
+		$words_excluded = esc_attr($instance['words_excluded']);
+		$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
+		$show_hits = ($instance['show_hits']) ? 'checked="checked"' : '';
+		$show_hits_text = esc_attr($instance['show_hits_text']);
       ?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -426,6 +430,10 @@ class LeastReadPostsWidget extends WP_Widget {
          <p>
           <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />
           <label for="<?php echo $this->get_field_id('show_hits'); ?>"><?php _e('Show post hits'); ?></label> 
+        </p>
+         <p>
+          <label for="<?php echo $this->get_field_id('show_hits_text'); ?>"><?php _e('Text to append to the post hits<br />(e.g. "views")'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('show_hits_text'); ?>" name="<?php echo $this->get_field_name('show_hits_text'); ?>" type="text" value="<?php echo $show_hits_text; ?>" />
         </p>
         <?php 
     }
@@ -458,8 +466,9 @@ class MostReadPostsWidget extends WP_Widget {
 		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
 		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
-		$instance['show_hits']   = ($new_instance['show_hits']=='on'  ) ? true : false;
 		$instance['show_thumbs'] = ($new_instance['show_thumbs']=='on') ? true : false;
+		$instance['show_hits']   = ($new_instance['show_hits']=='on'  ) ? true : false;
+		$instance['show_hits_text'] = strip_tags($new_instance['show_hits_text']);
         return $instance;
     }
 
@@ -468,15 +477,17 @@ class MostReadPostsWidget extends WP_Widget {
 			if (empty($instance)) {
 				$instance['title'] = 'Most Read Posts';
 				$instance['words_excluded'] = '';
-				$instance['show_hits']   = false;
 				$instance['show_thumbs'] = false;
+				$instance['show_hits']   = false;
+				$instance['show_hits_text'] = 'views';
 			}					
 			$title = esc_attr($instance['title']);
 			$posts_number = is_numeric($instance['posts_number']) ? esc_attr($instance['posts_number']) : 5;
 			$words_excluded = esc_attr($instance['words_excluded']);
 			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
-			$show_hits   = ($instance['show_hits']  ) ? 'checked="checked"' : '';
 			$show_thumbs = ($instance['show_thumbs']) ? 'checked="checked"' : '';
+			$show_hits   = ($instance['show_hits']  ) ? 'checked="checked"' : '';
+			$show_hits_text = esc_attr($instance['show_hits_text']);
 			?>
          <p>
           <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -495,12 +506,16 @@ class MostReadPostsWidget extends WP_Widget {
           <input class="widefat" id="<?php echo $this->get_field_id('days_ago'); ?>" name="<?php echo $this->get_field_name('days_ago'); ?>" type="text" value="<?php echo $days_ago; ?>" />
         </p>
          <p>
+          <input id="<?php echo $this->get_field_id('show_thumbs'); ?>" name="<?php echo $this->get_field_name('show_thumbs'); ?>" type="checkbox" <?php echo $show_thumbs; ?> />
+          <label for="<?php echo $this->get_field_id('show_thumbs'); ?>"><?php _e('Show post thumbs'); ?></label> 
+        </p>
+         <p>
           <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />
           <label for="<?php echo $this->get_field_id('show_hits'); ?>"><?php _e('Show post hits'); ?></label> 
         </p>
          <p>
-          <input id="<?php echo $this->get_field_id('show_thumbs'); ?>" name="<?php echo $this->get_field_name('show_thumbs'); ?>" type="checkbox" <?php echo $show_thumbs; ?> />
-          <label for="<?php echo $this->get_field_id('show_thumbs'); ?>"><?php _e('Show post thumbs'); ?></label> 
+          <label for="<?php echo $this->get_field_id('show_hits_text'); ?>"><?php _e('Text to append to the post hits<br />(e.g. "views")'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('show_hits_text'); ?>" name="<?php echo $this->get_field_name('show_hits_text'); ?>" type="text" value="<?php echo $show_hits_text; ?>" />
         </p>
         <?php 
     }

@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.5
-Stable tag: 1.9
+Tested up to: 3.5.1
+Stable tag: 2.0
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -69,39 +69,43 @@ Coming soon
 
 == Changelog ==
 
+= 2.0 =
+* Added: Use the comma "," for thousands digits
+* Added: Append a custom text (e.g. the word "views") next to total hits
+
 = 1.9 =
-Added: support for WPML plugin, showing most/least read posts for current language
+* Added: support for WPML plugin, showing most/least read posts for current language
 
 = 1.8 =
-Added: show post thumbs option
-Added: "mlrp_ul" ul class for easy CSS styling
-Fixed: better bot recognition
+* Added: show post thumbs option
+* Added: "mlrp_ul" ul class for easy CSS styling
+* Fixed: better bot recognition
 
 = 1.7 =
-Added: php function to retrieve and show hits inside the template loop
+* Added: php function to retrieve and show hits inside the template loop
 
 = 1.6 =
-Added: archived post hits are now shown in a column inside the backend post list.
+* Added: archived post hits are now shown in a column inside the backend post list.
 
 = 1.5 =
-Added: option to exclude posts older than XX days also in Least Read Posts (default: 365 days)
-Added: Frequently Asked Questions
+* Added: option to exclude posts older than XX days also in Least Read Posts (default: 365 days)
+* Added: Frequently Asked Questions
 
 = 1.4 =
-Added: option to exclude posts older than XX days in Most Read Posts (default: 365 days)
+* Added: option to exclude posts older than XX days in Most Read Posts (default: 365 days)
 
 = 1.3 =
-Added: style customization of hits on widget, through the "most_and_least_read_posts_hits" CSS class
-Changed: hits on widget put out of the link
-Fixed: query limited only to published posts
-Fixed: error while saving widget options
-Fixed: error while opening the Settings page
+* Added: style customization of hits on widget, through the "most_and_least_read_posts_hits" CSS class
+* Changed: hits on widget put out of the link
+* Fixed: query limited only to published posts
+* Fixed: error while saving widget options
+* Fixed: error while opening the Settings page
 
 = 1.2 =
-Added: option to show hits after the post title, inside the widgets
+* Added: option to show hits after the post title, inside the widgets
 
 = 1.1 =
-Added: optionally show hits inside the post content, with phrase, position and css style customization
+* Added: optionally show hits inside the post content, with phrase, position and css style customization
 
 = 1.0.0 =
 Initial release
