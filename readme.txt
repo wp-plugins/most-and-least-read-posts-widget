@@ -4,7 +4,7 @@ Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
 Tested up to: 3.5.1
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -68,6 +68,9 @@ E.g. 50x50 pixels images, floating on the right:
 Coming soon
 
 == Changelog ==
+
+= 2.0.2 =
+* Added: WhileTrue RSS Feed
 
 = 2.0.1 =
 * Fixed: Fix for the "Exclude post whose title contains any of these words" option - thank you Thomas!
