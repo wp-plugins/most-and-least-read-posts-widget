@@ -4,7 +4,7 @@ Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
 Tested up to: 3.5.1
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -20,7 +20,7 @@ The following options are customizable:
 
 The plugin starts counting hits once activated, storing them in the "custom_total_hits" custom field without the need of external accounts.
 
-The most popular web crawlers (e.g. Googlebot) are recognized and their hits discarded.
+The most popular web crawlers (e.g. Googlebot) are recognized and their hits discarded; also Admin hits are discarded.
 
 Archived post hits are shown in a column inside the backend post list.
 
@@ -68,6 +68,9 @@ E.g. 50x50 pixels images, floating on the right:
 Coming soon
 
 == Changelog ==
+
+= 2.0.3 =
+* Changed: Skip updating hits if user is admin
 
 = 2.0.2 =
 * Added: WhileTrue RSS Feed
