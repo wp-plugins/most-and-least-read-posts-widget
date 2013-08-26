@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.5.1
-Stable tag: 2.0.3
+Tested up to: 3.6
+Stable tag: 2.1
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -68,6 +68,9 @@ E.g. 50x50 pixels images, floating on the right:
 Coming soon
 
 == Changelog ==
+
+= 2.1 =
+* Fixed: Show post hits also when user is admin
 
 = 2.0.3 =
 * Changed: Skip updating hits if user is admin

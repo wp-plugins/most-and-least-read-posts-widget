@@ -1,14 +1,12 @@
 <?php
-
 /*
 Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.0.3
+Version: 2.1
 Author URI: http://www.whiletrue.it/
 */
-
 /*
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2, 
