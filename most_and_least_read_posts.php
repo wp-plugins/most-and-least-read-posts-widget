@@ -69,37 +69,37 @@ function most_and_least_read_posts_add_settings_link($links, $file) {
 
 function most_and_least_read_posts_update ($content) {
 
-	// SKIP IF USER IS ADMIN (AVOID INFLATING HITS)
-
-	if ( current_user_can( 'manage_options' ) ) {
-		return $content;
-	}
-
 	// ONLY APPLIES TO SINGLE POSTS
 
 	if (!is_single()) {
 		return $content;
 	}
-	
-	// AVOID THE MOST COMMON WEB SPIDERS
-	
-	$spiders = array(
-		'Googlebot', 'Yammybot', 'Openbot', 'Yahoo', 'Slurp', 'msnbot',
-		'ia_archiver', 'Lycos', 'Scooter', 'AltaVista', 'Teoma', 'Gigabot'
-	);
-	foreach ($spiders as $spider) {
-		if (preg_match('/'.$spider.'/i', $_SERVER['HTTP_USER_AGENT'])) {
-			return $content;
-		}
-	}
-
-	// UPDATE HITS
 
 	$post_id = get_the_ID();
 	$total_hits = most_and_least_read_posts_get_hits ($post_id);
-	$total_hits += 1;
-	$meta_key = 'custom_total_hits';
-	update_post_meta($post_id, $meta_key, str_pad($total_hits,9,0,STR_PAD_LEFT)); 
+
+	// SKIP IF USER IS ADMIN (AVOID INFLATING HITS)
+
+	if ( !current_user_can( 'manage_options' ) ) {
+	
+		// AVOID THE MOST COMMON WEB SPIDERS
+	
+		$spiders = array(
+			'Googlebot', 'Yammybot', 'Openbot', 'Yahoo', 'Slurp', 'msnbot',
+			'ia_archiver', 'Lycos', 'Scooter', 'AltaVista', 'Teoma', 'Gigabot'
+		);
+		foreach ($spiders as $spider) {
+			if (preg_match('/'.$spider.'/i', $_SERVER['HTTP_USER_AGENT'])) {
+				return $content;
+			}
+		}
+
+		// UPDATE HITS
+
+		$total_hits += 1;
+		$meta_key = 'custom_total_hits';
+		update_post_meta($post_id, $meta_key, str_pad($total_hits,9,0,STR_PAD_LEFT)); 
+	}
 
 	//GET ARRAY OF STORED VALUES
 	$option = most_and_least_read_posts_get_options_stored();
