@@ -42,6 +42,7 @@ For more informations: [www.whiletrue.it](http://www.whiletrue.it/most-and-least
 Do you like this plugin? Give a chance to our other works:
 
 * [Really Simple Facebook Twitter Share Buttons](http://www.whiletrue.it/really-simple-facebook-twitter-share-buttons-for-wordpress/ "Really Simple Facebook Twitter Share Buttons")
+* [Really simple Twitter Feed Widget](http://www.whiletrue.it/really-simple-twitter-feed-widget-for-wordpress/ "Really simple Twitter Feed Widget")
 * [Tilted Tag Cloud Widget](http://www.whiletrue.it/tilted-tag-cloud-widget-per-wordpress/ "Tilted Tag Cloud Widget")
 * [Reading Time](http://www.whiletrue.it/reading-time-for-wordpress/ "Reading Time")
 
