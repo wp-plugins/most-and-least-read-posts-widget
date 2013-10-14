@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.1
+Version: 2.1.1
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -17,7 +17,6 @@ Author URI: http://www.whiletrue.it/
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-
 
 add_filter('the_content', 'most_and_least_read_posts_update');
 
@@ -190,11 +189,11 @@ function most_and_least_read_posts ($instance, $order) {
 					}
 				}
 			}		
-		  	$out .=  '<li>
-					<a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
-						.$media.$line->post_title
+		  $out .=  '
+        <li><a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
+          .$media.$line->post_title
 					.'</a>
-					<span class="most_and_least_read_posts_hits">'.$hits .'</span>
+					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
 				</li>';
 		}   
 	} else {
