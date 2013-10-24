@@ -4,7 +4,7 @@ Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
 Tested up to: 3.6.1
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -56,7 +56,7 @@ Best is to install directly from WordPress. If manual installation is required, 
 The plugin starts collecting hits once installed, so there are "no results available" for a short time, until the first data is stored. 
 It's better to show the widget some hours (or days) after having installed it.
 
-= The same post shows up multiple times "
+= The same post shows up multiple times =
 This uncommon issue can be caused by duplicated custom fields in some posts. 
 To solve it, inspect the post custom fields and delete unnecessary duplicates of the "custom_total_hits" field. 
 
@@ -65,10 +65,10 @@ Yes, you can do it editing the "mlrp_ul" class in your template style.css file.
 E.g. 50x50 pixels images, floating on the right:
 .mlrp_ul img { width: 50px; height: 50px; float: right; }
 
-== Screenshots ==
-Coming soon
-
 == Changelog ==
+
+= 2.1.2 =
+* Changed: Code cleaning
 
 = 2.1.1 =
 * Changed: Code cleaning

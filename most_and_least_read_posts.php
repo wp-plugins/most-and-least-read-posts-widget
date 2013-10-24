@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.1.1
+Version: 2.1.2
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -346,8 +346,6 @@ function most_and_least_read_posts_feed () {
 				</ul>
 			</div>';
 	}
-	$x = is_rtl() ? 'left' : 'right'; // This makes sure that the positioning is also correct for right-to-left languages
-	$out .= '<style type="text/css">#plagiarism_id {float:'.$x.';}</style>';
 	return $out;
 }
 
