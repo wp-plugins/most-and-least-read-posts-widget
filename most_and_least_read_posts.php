@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.1.2
+Version: 2.1.3
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -528,7 +528,7 @@ class MostReadPostsWidget extends WP_Widget {
           <input class="widefat" id="<?php echo $this->get_field_id('posts_number'); ?>" name="<?php echo $this->get_field_name('posts_number'); ?>" type="text" value="<?php echo $posts_number; ?>" />
         </p>
          <p>
-          <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post whose title contains any of these words (comma separated):'); ?></label> 
+          <label for="<?php echo $this->get_field_id('words_excluded'); ?>"><?php _e('Exclude post if title contains any of these words (comma separated):'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('words_excluded'); ?>" name="<?php echo $this->get_field_name('words_excluded'); ?>" type="text" value="<?php echo $words_excluded; ?>" />
         </p>
          <p>
@@ -544,8 +544,14 @@ class MostReadPostsWidget extends WP_Widget {
           <label for="<?php echo $this->get_field_id('show_hits'); ?>"><?php _e('Show post hits'); ?></label> 
         </p>
          <p>
-          <label for="<?php echo $this->get_field_id('show_hits_text'); ?>"><?php _e('Text to append to the post hits<br />(e.g. "views")'); ?></label> 
+          <label for="<?php echo $this->get_field_id('show_hits_text'); ?>"><?php _e('Text to append to the post hits (e.g. "views")'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('show_hits_text'); ?>" name="<?php echo $this->get_field_name('show_hits_text'); ?>" type="text" value="<?php echo $show_hits_text; ?>" />
+        </p>
+        <p style="text-align:center; font-weight:bold;">
+          <?php echo __('Do you like it? I\'m supporting it, please support me!', 'rstw') ?><br />
+          <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=giu%40formikaio%2eit&item_name=WhileTrue&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted" target="_blank">
+         	  <img alt="PayPal - The safer, easier way to pay online!" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" > 
+          </a>
         </p>
         <?php 
     }
