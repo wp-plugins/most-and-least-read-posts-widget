@@ -465,6 +465,12 @@ class LeastReadPostsWidget extends WP_Widget {
           <label for="<?php echo $this->get_field_id('show_hits_text'); ?>"><?php _e('Text to append to the post hits<br />(e.g. "views")'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('show_hits_text'); ?>" name="<?php echo $this->get_field_name('show_hits_text'); ?>" type="text" value="<?php echo $show_hits_text; ?>" />
         </p>
+        <p style="text-align:center; font-weight:bold;">
+          <?php echo __('Do you like it? I\'m supporting it, please support me!', 'most-and-least-read-posts-widget') ?><br />
+          <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=giu%40formikaio%2eit&item_name=WhileTrue&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted" target="_blank">
+         	  <img alt="PayPal - The safer, easier way to pay online!" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" > 
+          </a>
+        </p>
         <?php 
     }
 
@@ -548,7 +554,7 @@ class MostReadPostsWidget extends WP_Widget {
           <input class="widefat" id="<?php echo $this->get_field_id('show_hits_text'); ?>" name="<?php echo $this->get_field_name('show_hits_text'); ?>" type="text" value="<?php echo $show_hits_text; ?>" />
         </p>
         <p style="text-align:center; font-weight:bold;">
-          <?php echo __('Do you like it? I\'m supporting it, please support me!', 'rstw') ?><br />
+          <?php echo __('Do you like it? I\'m supporting it, please support me!', 'most-and-least-read-posts-widget') ?><br />
           <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=giu%40formikaio%2eit&item_name=WhileTrue&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted" target="_blank">
          	  <img alt="PayPal - The safer, easier way to pay online!" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" > 
           </a>
