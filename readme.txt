@@ -3,7 +3,7 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.8.1
+Tested up to: 3.9
 Stable tag: 2.1.5
 
 Provide two widgets, showing lists of the most and reast read posts.
