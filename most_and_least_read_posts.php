@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.1.6
+Version: 2.1.7
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -131,7 +131,10 @@ function most_and_least_read_posts ($instance, $order) {
 		$excludes = array_filter(explode(',',$instance['words_excluded']));
 		$sql_esc_arr = array();
 		foreach($excludes as $val) {
-			$sql_esc_arr[] = " p.post_title not like '%".$val."%' ";
+      if (trim($val)=='') {
+        continue;
+      }
+			$sql_esc_arr[] = " p.post_title not like '%".trim($val)."%' ";
 		}
 		$sql_esc = " and ".implode(" and ", $sql_esc_arr)." ";
 	}
@@ -140,7 +143,7 @@ function most_and_least_read_posts ($instance, $order) {
 	$min_date = date('Y-m-d', mktime(4,0,0,date('m'),date('d')-$days_ago,date('Y')));
 
 	$sql_wpml = '';
-	if (defined("ICL_LANGUAGE_CODE") and ICL_LANGUAGE_CODE!='') {  //if WPML is active
+	if (defined("ICL_LANGUAGE_CODE") and ICL_LANGUAGE_CODE!='') {  // IF WPML IS ACTIVE
 		$sql_wpml = " JOIN ".$table_prefix."icl_translations as t on (t.element_id = p.ID and t.language_code = '".ICL_LANGUAGE_CODE."') ";
 	}
 	
