@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.1.8
+Version: 2.2
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -191,10 +191,16 @@ function most_and_least_read_posts ($instance, $order) {
 						$media = wp_get_attachment_image($attachment->ID, 'thumbnail', false);
 					}
 				}
-			}		
+			}
+      
+      $text = $media.$line->post_title;
+      if ($instance['add_line_break_before_thumbs']) {
+        $text = $line->post_title.'<br>'.$media;
+      }
+      		
 		  $out .=  '
         <li><a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
-          .$media.$line->post_title
+          .$text
 					.'</a>
 					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
 				</li>';
@@ -506,6 +512,7 @@ class MostReadPostsWidget extends WP_Widget {
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
 		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
 		$instance['show_thumbs'] = ($new_instance['show_thumbs']=='on') ? true : false;
+		$instance['add_line_break_before_thumbs'] = ($new_instance['add_line_break_before_thumbs']=='on') ? true : false;
 		$instance['show_hits']   = ($new_instance['show_hits']=='on'  ) ? true : false;
 		$instance['show_hits_text'] = strip_tags($new_instance['show_hits_text']);
         return $instance;
@@ -517,6 +524,7 @@ class MostReadPostsWidget extends WP_Widget {
 				$instance['title'] = 'Most Read Posts';
 				$instance['words_excluded'] = '';
 				$instance['show_thumbs'] = false;
+				$instance['add_line_break_before_thumbs'] = false;
 				$instance['show_hits']   = false;
 				$instance['show_hits_text'] = 'views';
 			}					
@@ -525,6 +533,7 @@ class MostReadPostsWidget extends WP_Widget {
 			$words_excluded = esc_attr($instance['words_excluded']);
 			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
 			$show_thumbs = ($instance['show_thumbs']) ? 'checked="checked"' : '';
+      $add_line_break_before_thumbs = ($instance['add_line_break_before_thumbs']) ? 'checked="checked"' : '';
 			$show_hits   = ($instance['show_hits']  ) ? 'checked="checked"' : '';
 			$show_hits_text = esc_attr($instance['show_hits_text']);
 			?>
@@ -547,6 +556,10 @@ class MostReadPostsWidget extends WP_Widget {
          <p>
           <input id="<?php echo $this->get_field_id('show_thumbs'); ?>" name="<?php echo $this->get_field_name('show_thumbs'); ?>" type="checkbox" <?php echo $show_thumbs; ?> />
           <label for="<?php echo $this->get_field_id('show_thumbs'); ?>"><?php _e('Show post thumbs'); ?></label> 
+        </p>
+         <p>
+          <input id="<?php echo $this->get_field_id('add_line_break_before_thumbs'); ?>" name="<?php echo $this->get_field_name('add_line_break_before_thumbs'); ?>" type="checkbox" <?php echo $add_line_break_before_thumbs; ?> />
+          <label for="<?php echo $this->get_field_id('add_line_break_before_thumbs'); ?>"><?php _e('Add line break before thumbs'); ?></label> 
         </p>
          <p>
           <input id="<?php echo $this->get_field_id('show_hits'); ?>" name="<?php echo $this->get_field_name('show_hits'); ?>" type="checkbox" <?php echo $show_hits; ?> />
