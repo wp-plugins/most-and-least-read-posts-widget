@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.2
+Version: 2.3
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -193,7 +193,15 @@ function most_and_least_read_posts ($instance, $order) {
 				}
 			}
       
-      $text = $media.$line->post_title;
+      
+      $post_title_shown = $line->post_title;
+      if (isset($instance['title_max_chars']) && is_numeric($instance['title_max_chars'])) {
+        if (strlen($post_title_shown) > $instance['title_max_chars']) {
+          $last_space = strrpos(substr($post_title_shown, 0, $instance['title_max_chars']), ' ');
+          $post_title_shown = substr($post_title_shown, 0, $last_space) . '...';
+        }
+      }
+      $text = $media.$post_title_shown;
       if ($instance['add_line_break_before_thumbs']) {
         $text = $line->post_title.'<br>'.$media;
       }
@@ -511,6 +519,7 @@ class MostReadPostsWidget extends WP_Widget {
 		$instance['posts_number'] = strip_tags($new_instance['posts_number']);
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
 		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
+		$instance['title_max_chars'] = strip_tags($new_instance['title_max_chars']);
 		$instance['show_thumbs'] = ($new_instance['show_thumbs']=='on') ? true : false;
 		$instance['add_line_break_before_thumbs'] = ($new_instance['add_line_break_before_thumbs']=='on') ? true : false;
 		$instance['show_hits']   = ($new_instance['show_hits']=='on'  ) ? true : false;
@@ -523,6 +532,7 @@ class MostReadPostsWidget extends WP_Widget {
 			if (empty($instance)) {
 				$instance['title'] = 'Most Read Posts';
 				$instance['words_excluded'] = '';
+				$instance['title_max_chars'] = '';
 				$instance['show_thumbs'] = false;
 				$instance['add_line_break_before_thumbs'] = false;
 				$instance['show_hits']   = false;
@@ -532,6 +542,7 @@ class MostReadPostsWidget extends WP_Widget {
 			$posts_number = is_numeric($instance['posts_number']) ? esc_attr($instance['posts_number']) : 5;
 			$words_excluded = esc_attr($instance['words_excluded']);
 			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
+			$title_max_chars = esc_attr($instance['title_max_chars']);
 			$show_thumbs = ($instance['show_thumbs']) ? 'checked="checked"' : '';
       $add_line_break_before_thumbs = ($instance['add_line_break_before_thumbs']) ? 'checked="checked"' : '';
 			$show_hits   = ($instance['show_hits']  ) ? 'checked="checked"' : '';
@@ -552,6 +563,10 @@ class MostReadPostsWidget extends WP_Widget {
          <p>
           <label for="<?php echo $this->get_field_id('days_ago'); ?>"><?php _e('Look back X days ago:'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('days_ago'); ?>" name="<?php echo $this->get_field_name('days_ago'); ?>" type="text" value="<?php echo $days_ago; ?>" />
+        </p>
+         <p>
+          <label for="<?php echo $this->get_field_id('title_max_chars'); ?>"><?php _e('Limit post titles to X chars (leave blank to disable):'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('title_max_chars'); ?>" name="<?php echo $this->get_field_name('title_max_chars'); ?>" type="text" value="<?php echo $title_max_chars; ?>" />
         </p>
          <p>
           <input id="<?php echo $this->get_field_id('show_thumbs'); ?>" name="<?php echo $this->get_field_name('show_thumbs'); ?>" type="checkbox" <?php echo $show_thumbs; ?> />

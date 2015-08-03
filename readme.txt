@@ -3,13 +3,13 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 4.2.2
-Stable tag: 2.2
+Tested up to: 4.2.3
+Stable tag: 2.3
 
 Provide two widgets, showing lists of the most and reast read posts.
 
 == Description ==
-"Most And Least Read Posts Widget" is a free plugin for Wordpress, developed by the Whiletrue.it staff to generate lists of the most and least read posts.
+"Most And Least Read Posts Widget" is a free plugin for Wordpress. developed by Giuliano Polverari (WhileTrue.it) to generate lists of the most and least read posts.
 
 The following options are customizable:
 
@@ -73,6 +73,9 @@ E.g. 50x50 pixels images, floating on the right:
 .mlrp_ul img { width: 50px; height: 50px; float: right; }
 
 == Changelog ==
+
+= 2.3 =
+* Added: New "Limit post titles to X chars" option
 
 = 2.2 =
 * Added: New "add line break before thumb" option
