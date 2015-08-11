@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.3
+Version: 2.4
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -147,7 +147,13 @@ function most_and_least_read_posts ($instance, $order) {
 		$sql_wpml = " JOIN ".$table_prefix."icl_translations as t on (t.element_id = p.ID and t.language_code = '".ICL_LANGUAGE_CODE."') ";
 	}
 	
-	$sql = " select DISTINCT p.ID, p.post_title, m.meta_value
+  // FOR PERFORMANCE, ADD EXCERPT FIELDS TO THE QUERY ONLY WHEN THEY ARE NEEDED
+  $sql_excerpt_fields = "";
+  if (isset($instance['excerpt_max_chars']) && is_numeric($instance['excerpt_max_chars'])) {
+    $sql_excerpt_fields = " , p.post_excerpt, p.post_content ";
+  }
+
+	$sql = " select DISTINCT p.ID, p.post_title, m.meta_value ".$sql_excerpt_fields."
 		FROM $wpdb->postmeta as m
 			LEFT JOIN $wpdb->posts as p on (m.post_id = p.ID)
 			".$sql_wpml."
@@ -205,12 +211,23 @@ function most_and_least_read_posts ($instance, $order) {
       if ($instance['add_line_break_before_thumbs']) {
         $text = $line->post_title.'<br>'.$media;
       }
+      $excerpt = '';
+      if (isset($instance['excerpt_max_chars']) && is_numeric($instance['excerpt_max_chars'])) {
+        $excerpt = ($line->post_excerpt != '') ? $line->post_excerpt : strip_tags($line->post_content);
+        if (strlen($excerpt) > $instance['excerpt_max_chars']) {
+          $last_space = strrpos(substr($excerpt, 0, $instance['excerpt_max_chars']), ' ');
+          $excerpt = substr($excerpt, 0, $last_space) . '...';
+        }
+        // ADD A SURRONDING DIV FOR EASIER CSS STYLING
+        $excerpt = '<div class="most_and_least_read_posts_excerpt">'.$excerpt.'</div>';
+      }
       		
 		  $out .=  '
         <li><a title="'.str_replace("'","&apos;", $line->post_title).'" href="'.get_permalink($line->ID).'">'
           .$text
 					.'</a>
 					<span class="most_and_least_read_posts_hits">'.$hits.'</span>
+          '.$excerpt.'
 				</li>';
 		}   
 	} else {
@@ -265,7 +282,7 @@ function most_and_least_read_posts_options () {
 	</style>
 	
 	<div class="wrap">
-	<h2>'.__( 'Most and least read posts', 'menu-test' ).'</h2>
+	<h1>'.__( 'Most and least read posts', 'menu-test' ).'</h1>
 	<div id="poststuff" style="padding-top:10px; position:relative;">
 
 	<div style="float:left; width:74%; padding-right:1%;">
@@ -500,7 +517,8 @@ class LeastReadPostsWidget extends WP_Widget {
 class MostReadPostsWidget extends WP_Widget {
     /** constructor */
     function MostReadPostsWidget() {
-        parent::WP_Widget(false, $name = 'Most Read Posts');	
+        $control_ops = array('width' => 450);
+        parent::WP_Widget(false, 'Most Read Posts', array(), $control_ops);	
     }
 
     /** @see WP_Widget::widget */
@@ -520,6 +538,7 @@ class MostReadPostsWidget extends WP_Widget {
 		$instance['words_excluded'] = strip_tags($new_instance['words_excluded']);
 		$instance['days_ago'] = strip_tags($new_instance['days_ago']);
 		$instance['title_max_chars'] = strip_tags($new_instance['title_max_chars']);
+		$instance['excerpt_max_chars'] = strip_tags($new_instance['excerpt_max_chars']);
 		$instance['show_thumbs'] = ($new_instance['show_thumbs']=='on') ? true : false;
 		$instance['add_line_break_before_thumbs'] = ($new_instance['add_line_break_before_thumbs']=='on') ? true : false;
 		$instance['show_hits']   = ($new_instance['show_hits']=='on'  ) ? true : false;
@@ -533,6 +552,7 @@ class MostReadPostsWidget extends WP_Widget {
 				$instance['title'] = 'Most Read Posts';
 				$instance['words_excluded'] = '';
 				$instance['title_max_chars'] = '';
+				$instance['excerpt_max_chars'] = '';
 				$instance['show_thumbs'] = false;
 				$instance['add_line_break_before_thumbs'] = false;
 				$instance['show_hits']   = false;
@@ -543,6 +563,7 @@ class MostReadPostsWidget extends WP_Widget {
 			$words_excluded = esc_attr($instance['words_excluded']);
 			$days_ago = is_numeric($instance['days_ago']) ? esc_attr($instance['days_ago']) : 365;
 			$title_max_chars = esc_attr($instance['title_max_chars']);
+			$excerpt_max_chars = esc_attr($instance['excerpt_max_chars']);
 			$show_thumbs = ($instance['show_thumbs']) ? 'checked="checked"' : '';
       $add_line_break_before_thumbs = ($instance['add_line_break_before_thumbs']) ? 'checked="checked"' : '';
 			$show_hits   = ($instance['show_hits']  ) ? 'checked="checked"' : '';
@@ -567,6 +588,10 @@ class MostReadPostsWidget extends WP_Widget {
          <p>
           <label for="<?php echo $this->get_field_id('title_max_chars'); ?>"><?php _e('Limit post titles to X chars (leave blank to disable):'); ?></label> 
           <input class="widefat" id="<?php echo $this->get_field_id('title_max_chars'); ?>" name="<?php echo $this->get_field_name('title_max_chars'); ?>" type="text" value="<?php echo $title_max_chars; ?>" />
+        </p>
+         <p>
+          <label for="<?php echo $this->get_field_id('excerpt_max_chars'); ?>"><?php _e('Show post excerpts, X chars (leave blank to disable):'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('excerpt_max_chars'); ?>" name="<?php echo $this->get_field_name('excerpt_max_chars'); ?>" type="text" value="<?php echo $excerpt_max_chars; ?>" />
         </p>
          <p>
           <input id="<?php echo $this->get_field_id('show_thumbs'); ?>" name="<?php echo $this->get_field_name('show_thumbs'); ?>" type="checkbox" <?php echo $show_thumbs; ?> />
