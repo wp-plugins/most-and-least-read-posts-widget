@@ -4,7 +4,7 @@ Plugin Name: Most and Least Read Posts Widget
 Plugin URI: http://www.whiletrue.it/
 Description: Provide two widgets, showing lists of the most and reast read posts.
 Author: WhileTrue
-Version: 2.4
+Version: 2.4.1
 Author URI: http://www.whiletrue.it/
 */
 /*
@@ -434,8 +434,8 @@ function most_and_least_read_posts_get_options_stored () {
  */
 class LeastReadPostsWidget extends WP_Widget {
     /** constructor */
-    function LeastReadPostsWidget() {
-        parent::WP_Widget(false, $name = 'Least Read Posts');	
+    function __construct() {
+        parent::__construct(false, $name = 'Least Read Posts');	
     }
 
     /** @see WP_Widget::widget */
@@ -516,9 +516,9 @@ class LeastReadPostsWidget extends WP_Widget {
  */
 class MostReadPostsWidget extends WP_Widget {
     /** constructor */
-    function MostReadPostsWidget() {
+    function __construct() {
         $control_ops = array('width' => 450);
-        parent::WP_Widget(false, 'Most Read Posts', array(), $control_ops);	
+        parent::__construct(false, 'Most Read Posts', array(), $control_ops);	
     }
 
     /** @see WP_Widget::widget */
